@@ -9,6 +9,8 @@
 <hello-title my-title="Salut!"></hello-title>
 <hello-title my-title="Yo!"></hello-title>
 <hello-title my-title="Hello!"></hello-title>
+<hr>
+<humans-list></humans-list>
 
 <script src="js/bower_components/jquery/dist/jquery.js"></script>
 <script src="js/bower_components/underscore/underscore.js"></script>
@@ -19,8 +21,34 @@
 <!-- déclaration de mon nouveau tag -->
 <script src="js/tags/hello-title.tag" type="riot/tag"></script>
 
+<script src="js/tags/humans-list.tag" type="riot/tag"></script>
+
 <script>
     riot.mount("hello-title");
+
+    /* ***** humans-list ***** */
+
+    var Kind = function () {};
+    Kind.extend = Backbone.Model.extend;
+
+    var HumansServices = Kind.extend({
+        constructor: function () {
+            var Human = Backbone.Model.extend({
+                urlRoot: "humans"
+            });
+            var Humans = Backbone.Collection.extend({model: Human, url: "humans"});
+
+            this.humansColl = new Humans();
+        }
+    });
+
+    var humansServices = new HumansServices();
+
+    /* Monter humans-list en lui passant le service */
+
+    riot.mount("humans-list", {
+        humansServices: humansServices
+    });
 </script>
 </body>
 </html>
